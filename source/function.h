@@ -13,6 +13,7 @@ extern SDL_Window* window;
 extern SDL_Surface* windowSurface;
 extern SDL_Surface* image[];
 extern char* filename[];
+extern int i;
 
 //Returns a pointer to an array of surfaces, requires an array of surfaces filenames and length of that array
 SDL_Surface* loadBMP(char* filename);
