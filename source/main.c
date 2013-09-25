@@ -66,7 +66,7 @@ int main(int argc, char* args[])
                 exit = true; //I wanted to push an SDL_QUIT event ;_;
                 break;
             default:
-                printf("Wut?! What the hell man?");
+                printf("It looks like you made a typo while setting the gamemode. That was bound to happen\n");
             }
             if (event.type == SDL_QUIT)
             {
@@ -178,13 +178,13 @@ void mainLoop(void)
 
 void menu(void)
 {
-    printf("Sup'. I'm the boss (menu).\n");
+    printf("Greetings. I'm the menu.\n"); //Will eventually get replaced by a splashscreen
     gameMode = PLAYGAME;
 }
 
 void gameOver(int score)
 {
-    printf("You lose! your score is %d! Yay!\n", score);
+    printf("You lose! Your score is %d! Yay!\n", score);
     gameMode = EXIT;
 }
 
