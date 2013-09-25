@@ -10,7 +10,7 @@ void startSDL()
 {
     if (SDL_Init(SDL_INIT_EVERYTHING)<0)
     {
-        printf("Damn! SDL could not start! Error; %s\n", SDL_GetError());
+        printf("Oh no! SDL could not start! Error; %s\n", SDL_GetError());
         exit(1);
     }
 
@@ -27,9 +27,8 @@ void startSDL()
 
 void quitSDL()
 {
-    int i;
     //Deallocate surfaces
-    /*
+    /* I feel like I don't really need to do this and it will just attract errors
     for (i=0; i<FILES;i++)
     {
         SDL_FreeSurface(image[i]);
@@ -46,6 +45,7 @@ void quitSDL()
 	SDL_Quit();
 }
 
+//One day I'll upgrade to using textures and PNGs, when I fully understand the implications
 SDL_Surface* loadBMP(char* filename)
 {
     SDL_Surface* finalSurface = NULL;
@@ -54,13 +54,13 @@ SDL_Surface* loadBMP(char* filename)
     //Load BMP and check for error
 	if((temporarySurface = SDL_LoadBMP(filename)) == NULL )
 	{
-		printf( "Fuck! The .bmp %s could not be loaded! Error; %s\n", filename, SDL_GetError());
+		printf( "Tch! The .bmp %s could not be loaded! Error; %s\n", filename, SDL_GetError());
         exit(1);
     }
 
     if ((finalSurface = SDL_ConvertSurface(temporarySurface, windowSurface->format, NULL))==NULL)
     {
-        printf("Nope! Optimizing %s didn't work! Error; %s", filename, SDL_GetError());
+        printf("Nope! Converting %s didn't work! Error; %s", filename, SDL_GetError());
         exit(1);
     }
     SDL_FreeSurface(temporarySurface);
@@ -68,6 +68,7 @@ SDL_Surface* loadBMP(char* filename)
     return finalSurface;
 }
 
+//I might use this if it actually gets messy enough
 void moveRect(SDL_Rect rectangle, int incrementY, int incrementX)
 {
     rectangle.x = rectangle.x + incrementX;
