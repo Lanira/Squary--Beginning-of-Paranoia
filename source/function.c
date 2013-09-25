@@ -3,6 +3,7 @@
 */
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include <SDL.h>
 #include "function.h"
 
@@ -73,5 +74,17 @@ void moveRect(SDL_Rect rectangle, int incrementY, int incrementX)
 {
     rectangle.x = rectangle.x + incrementX;
     rectangle.y = rectangle.y + incrementY;
+}
+
+void initWhites(SDL_Rect * rectangles)
+{
+    srand((unsigned int)time(0));
+	for (i=0; i<10; i++)
+	{
+		rectangles[i].w = 20;
+		rectangles[i].h = 20;
+		rectangles[i].x = rand()%620;
+		rectangles[i].y = rand()%460;
+	}
 }
 

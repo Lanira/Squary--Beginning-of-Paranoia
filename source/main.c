@@ -17,6 +17,7 @@ enum gameState {
 
 SDL_Window* window;
 SDL_Surface* windowSurface;
+SDL_Surface* backgroundSurface;
 SDL_Surface* image[FILES];
 char* filename[FILES] = {"../ressources/background.bmp", "../ressources/blacksquare.bmp", "../ressources/whitesquare.bmp" };
 
@@ -25,11 +26,11 @@ int i; //my favorite counter variable
 //File variables
 Uint8 * keyboardKeys;
 SDL_Rect square = {(WIDTH/2-20), (HEIGHT/2-20), 20, 20};
-SDL_Rect target = {100, 100, 20, 20};
 char gameMode = SPLASHSCREEN;
 SDL_Event event;
 int score;
 
+SDL_Rect whites[10];
 
 /*
     Functions prototype
@@ -45,7 +46,7 @@ int main(int argc, char* args[])
     for (i=0; i<FILES; i++)
     {
         image[i] = loadBMP(filename[i]);
-    }
+	}
     bool exit = false;
     while (!exit)
     {
@@ -81,15 +82,26 @@ int main(int argc, char* args[])
 
 void mainLoop(void)
 {
+    //Give values to the white squares
+    initWhites(whites);
+
     // initial render
-    SDL_BlitSurface(image[0], NULL, windowSurface, NULL);
+    backgroundSurface = image[0];
+    //SDL_BlitSurface(image[0], NULL, backgroundSurface, NULL);
+	for (i=0; i<10; i++)
+	{
+		SDL_BlitSurface(image[2], NULL, backgroundSurface, &whites[i]);
+	}
+	SDL_BlitSurface(backgroundSurface, NULL, windowSurface, NULL);
     SDL_BlitSurface(image[1], NULL, windowSurface, &square);
     SDL_UpdateWindowSurface(window);
 
-    if (event.type == SDL_KEYDOWN) //This is a mess, and will be solved soon
+
+
+    while (1)
     {
         SDL_PollEvent(&event);
-        while (event.type != SDL_KEYUP)
+        if (event.type == SDL_KEYDOWN || event.type == SDL_QUIT)
         {
             if (event.type == SDL_QUIT)
             {
@@ -166,7 +178,7 @@ void mainLoop(void)
                     printf("Screw that! Something else...\n");
                 }
     */            //render
-                SDL_BlitSurface(image[0], NULL, windowSurface, NULL);
+                SDL_BlitSurface(backgroundSurface, NULL, windowSurface, NULL);
                 SDL_BlitSurface(image[1], NULL, windowSurface, &square);
                 SDL_UpdateWindowSurface(window);
 
