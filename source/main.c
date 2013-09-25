@@ -1,4 +1,5 @@
 //My atttempt to have a moving square
+//This project needs to be compiled with SDL 2, with the headers in the right place too
 #include <stdio.h>
 #include <stdlib.h>
 #include <SDL.h>
@@ -17,7 +18,7 @@ enum gameState {
 SDL_Window* window;
 SDL_Surface* windowSurface;
 SDL_Surface* image[FILES];
-char* filename[FILES] = {"./res/bg.bmp", "./res/square.bmp"};
+char* filename[FILES] = {"../ressources/background.bmp", "../ressources/blacksquare.bmp", "../ressources/whitesquare.bmp" };
 
 int i; //my favorite counter variable
 
@@ -85,7 +86,7 @@ void mainLoop(void)
     SDL_BlitSurface(image[1], NULL, windowSurface, &square);
     SDL_UpdateWindowSurface(window);
 
-    if (event.type == SDL_KEYDOWN)
+    if (event.type == SDL_KEYDOWN) //This is a mess, and will be solved soon
     {
         SDL_PollEvent(&event);
         while (event.type != SDL_KEYUP)
@@ -137,14 +138,16 @@ void mainLoop(void)
                         square.x = 630 + square.x;
                     }
                 }
-
+/* Leftovers from trying to detect a collision, needs to be improved
                 if ((square.x > target.x) && (square.x < (target.x+20))
                     && (square.y>target.y) && (square.y<(target.y+20))){
                     score +=1;
                     gameMode = GAMEOVER;
                     break;
                 }
-    /*            else if ((keyboardKeys[SDL_SCANCODE_LEFT] && !keyboardKeys[SDL_SCANCODE_RIGHT])
+*/
+/* Old code just waiting to be deleted when I'm sure I don't need it anymore
+                else if ((keyboardKeys[SDL_SCANCODE_LEFT] && !keyboardKeys[SDL_SCANCODE_RIGHT])
                     || (keyboardKeys[SDL_SCANCODE_A] && !keyboardKeys[SDL_SCANCODE_D]))
                 {
                     square.x -= INC;
@@ -164,7 +167,6 @@ void mainLoop(void)
                 }
     */            //render
                 SDL_BlitSurface(image[0], NULL, windowSurface, NULL);
-                SDL_BlitSurface(image[1], NULL, windowSurface, &target);
                 SDL_BlitSurface(image[1], NULL, windowSurface, &square);
                 SDL_UpdateWindowSurface(window);
 
