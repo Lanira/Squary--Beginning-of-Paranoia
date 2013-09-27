@@ -8,18 +8,11 @@
 #define INC 2 //increment for the square's movement
 
 //Global variables
-enum gameState {
-    SPLASHSCREEN,
-    PLAYGAME,
-    GAMEOVER,
-    EXIT
-};
-
 SDL_Window* window;
 SDL_Surface* windowSurface;
 SDL_Surface* backgroundSurface;
-SDL_Surface* image[FILES];
-char* filename[FILES] = {"../ressources/background.bmp", "../ressources/blacksquare.bmp", "../ressources/whitesquare.bmp" };
+SDL_Surface* image[IMAGES];
+char* filename[IMAGES] = {"../ressources/background.bmp", "../ressources/blacksquare.bmp", "../ressources/whitesquare.bmp" };
 
 int i; //my favorite counter variable
 
@@ -29,8 +22,10 @@ SDL_Rect square = {(WIDTH/2-20), (HEIGHT/2-20), 20, 20};
 char gameMode = SPLASHSCREEN;
 SDL_Event event;
 int score;
+int time;
 
-SDL_Rect whites[10];
+struct Opponent whites[WHITES]= {};
+
 
 /*
     Functions prototype
@@ -43,7 +38,7 @@ int main(int argc, char* args[])
 {
     startSDL();
 
-    for (i=0; i<FILES; i++)
+    for (i=0; i<IMAGES; i++)
     {
         image[i] = loadBMP(filename[i]);
 	}
@@ -82,21 +77,22 @@ int main(int argc, char* args[])
 
 void mainLoop(void)
 {
+    printf("Before initWhites()\n");
     //Give values to the white squares
-    initWhites(whites);
+    initWhites(whites, WHITES);
+    printf("After initWhites() and before inital rendering\n");
 
     // initial render
-    backgroundSurface = image[0];
-    //SDL_BlitSurface(image[0], NULL, backgroundSurface, NULL);
+    SDL_BlitSurface(image[0], NULL, windowSurface, NULL);
 	for (i=0; i<10; i++)
 	{
-		SDL_BlitSurface(image[2], NULL, backgroundSurface, &whites[i]);
+	    printf("Before bliting squares.\n");
+		SDL_BlitSurface(image[2], NULL, windowSurface, &(whites[i].square));
 	}
-	SDL_BlitSurface(backgroundSurface, NULL, windowSurface, NULL);
     SDL_BlitSurface(image[1], NULL, windowSurface, &square);
     SDL_UpdateWindowSurface(window);
 
-
+    printf("After rendering and before game loop\n");
 
     while (1)
     {
@@ -150,41 +146,32 @@ void mainLoop(void)
                         square.x = 630 + square.x;
                     }
                 }
-/* Leftovers from trying to detect a collision, needs to be improved
-                if ((square.x > target.x) && (square.x < (target.x+20))
-                    && (square.y>target.y) && (square.y<(target.y+20))){
-                    score +=1;
-                    gameMode = GAMEOVER;
-                    break;
-                }
-*/
-/* Old code just waiting to be deleted when I'm sure I don't need it anymore
-                else if ((keyboardKeys[SDL_SCANCODE_LEFT] && !keyboardKeys[SDL_SCANCODE_RIGHT])
-                    || (keyboardKeys[SDL_SCANCODE_A] && !keyboardKeys[SDL_SCANCODE_D]))
-                {
-                    square.x -= INC;
-                    if (square.x < 0)
-                        square.x = 630 + square.x;
-                }
-                else if ((keyboardKeys[SDL_SCANCODE_RIGHT] && !keyboardKeys[SDL_SCANCODE_LEFT])
-                         || (keyboardKeys[SDL_SCANCODE_D] && !keyboardKeys[SDL_SCANCODE_A]))
-                {
-                    square.x = (square.x + INC) % 630;
-                }
-
-
-                else
-                {
-                    printf("Screw that! Something else...\n");
-                }
-    */            //render
-                SDL_BlitSurface(backgroundSurface, NULL, windowSurface, NULL);
-                SDL_BlitSurface(image[1], NULL, windowSurface, &square);
-                SDL_UpdateWindowSurface(window);
-
                 printf("Pos: x= %d, y= %d\n", square.x, square.y);
             }
         }
+        //update whites
+
+        printf("Before time\n");
+        time = (int)(SDL_GetTicks()%500);
+        if (time>250 && time<250)
+        {
+            moveOpponents(&whites, WHITES);
+            printf("Smth\n");
+        }
+
+
+        //renderer
+        SDL_BlitSurface(image[0], NULL, windowSurface, NULL);
+        for (i=0; i<10; i++)
+        {
+            if (whites[i].status == ON)
+            {
+            SDL_BlitSurface(image[2], NULL, windowSurface, &whites[i].square);
+            }
+        }
+        SDL_BlitSurface(image[1], NULL, windowSurface, &square);
+        SDL_UpdateWindowSurface(window);
+
     }
 }
 
